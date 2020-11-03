@@ -31,11 +31,7 @@
 10.0f // 默认是 float 型
 ```
 
-
-
 #### 数据运算
-
-
 
 ##### 整除 
 
@@ -377,21 +373,221 @@ Random r = new Random();
 System.out.println(r.nextInt(10)); // 生成一个[0, 10) 之间的int
 ```
 
+#### BigInteger
+
+**常量**
+
+```java
+BigInteger one = BigInteger.ONE;
+BigInteger ten = BigInteger.TEN;
+BigInteger zero = BigInteger.ZERO;
+```
+
+**构造函数**
+
+```java
+// 直接传入一个字符串
+BigInteger x = new BigInteger("11000"); 
+
+// 前面时字符串， 后面是基数
+BigInteger y = new BigInteger("110",2); // 6 
+```
+
+**常用方法**
+
+```java
+BigInteger x = new BigInteger("11000");
+BigInteger y = new BigInteger("110",2); // 6
+BigInteger z = new BigInteger("10");
+
+System.out.println(x.intValue());
+System.out.println(y.intValue());
+
+x = x.add(y);
+x = x.subtract(y);
+x = x.multiply(y);
+x = x.divide(y);
+
+x = x.mod(y);
+x = x.pow(y.intValue());
+x = x.modPow(y,z); // x ^ y % z
+x = x.negate();    // 取反
+x = x.abs();       // 绝对值
+x = x.gcd(y);
+x = x.and(y);
+x.compareTo(y); // x < y : -1, x == y : 0   x > y : 1
+x.equals(y);   //
+x = x.max(y);  // 返回 max(x,y)
+x = x.min(y);  // 返回 min(x,y)
+```
+
 ### Java集合
 
+- `Queue`
+- `Deque`
+- `LinkedList`
+- `ArrayList`
+- `Stack`
+- `Map`
+- `Set`
+
+
+
+##### `ArrayList` 的常用方法
+
+`LinkedList` 方法也一样。只不过效率不一样
+
+```java
+// ArrayList
+// List<String> list = new LinkedList<>();
+List<String> list = new LinkedList<>();
+
+list.add("ytc"); // 添加
+list.add("sxy");
+list.add("me");
+list.add("yu");
+list.add("ttt");
+System.out.println("list[0] = " + list.get(0)); // 查询
+System.out.println("size is " + list.size());   // 元素个数
+System.out.println("is empty? " + list.isEmpty()); // 是否为空
+System.out.println("is contains yy? " + list.contains("yy")); // 查询是否存在
+System.out.println("index of ytc? " + list.indexOf("ytc")); // 查询元素位置
+list.set(0, "tao");  // 元素覆盖
+list.remove("me");  // 元素删除
+list.remove(2);  // 指定位置元素删除
+
+for (String val : list)
+    System.out.println(val);
+list.clear();  // 清空
+```
+
+##### `Queue` 的常用方法
+
+LinkedList 类实现了 Queue 接口，因此我们可以把 LinkedList 当作Queue来使用
+
+ add， remove，element 方法会抛异常。（添加，查看并删除，查看）
+
+offer，poll，peek    方法不会抛异常。      （添加，查看并删除，查看）
+
+```java
+// Queue
+Queue<String> queue = new LinkedList<>();
+queue.offer("f");
+queue.offer("g");
+queue.offer("a");
+queue.offer("b");
+queue.offer("c");
+
+for (String val : queue)
+    System.out.println(val);
+
+System.out.println("poll " + queue.poll()); // 返回第一个元素，并弹出
+System.out.println(queue.peek());  // 返回队首
+System.out.println(queue.element()); // 返回队首
+System.out.println(queue.size());   // 队列的大小
+System.out.println(queue.isEmpty()); //  队列是否为空
+ 
+queue.clear();
+```
+
+##### `Deque` 的常用方法
+
+Deque 时 Queue 的子接口，所以可以使用 Queue 的方法。
+
+- 插入  add / offer
+
+  - 异常不安全
+
+    void add() | addFirst() | addLast() 
+
+  - 异常安全
+
+    boolean offer()  |offerFirst() |offerLast() 
+
+- 查看并删除
+
+  - 异常不安全
+
+    E remove | removeFirst | removeLast()
+
+  - 异常安全
+
+    E poll() | pollFirst() | pollLast();
+
+- 查看
+
+  - 异常不安全
+
+    E element() | getFirst() | getLast()
+
+  - 异常安全
+
+    E peek() | peekFirst() | peekLast()
 
 
 
 
 
+也可以使用 `Deque` 来实现 `Stack` 的操作。
+
+- void push();   // void addFirst()
+- E pop() ;      // E removeFirst
+
+```java
+// Stack
+Deque<String> deque = new ArrayDeque<>();
+deque.push("yyy");
+deque.push("aaa");
+deque.push("bbb");
+System.out.println(deque.pop());
+deque.clear();
+System.out.println(deque.isEmpty());
+```
 
 
 
+##### `Map` 的常用方法
+
+```java
+// Map
+Map<String, String> map = new HashMap<>();
+map.put("1", "ytc");
+map.put("2", "sxy");
+map.put("3", "yu");
+map.put("4", "tc");
+System.out.println(map.get("3"));
+map.remove("1"); // 删除一个键值对
+
+for (String key : map.keySet()) // 遍历
+    System.out.println(key + " " + map.get(key));
+
+for (Map.Entry<String, String> entry : map.entrySet()) // 遍历
+    System.out.println(entry.getKey() + " " + entry.getValue());
 
 
+System.out.println(map.size());
+map.clear();
+System.out.println(map.isEmpty());
+```
 
+##### `Set` 的常用方法
 
+```java
+// Set
+Set<String> set  =new HashSet<>();
+set.add("1");
+set.add("2");
+set.add("3");
+set.add("4");
+System.out.println("size of set : " + set.size());
+for (String val: set)
+    System.out.println(val + " ");
+System.out.println("contains 4 ? " + set.contains("4"));
 
+set.remove("2");
 
+set.clear();
 
+System.out.println(set.isEmpty());
+```
 
