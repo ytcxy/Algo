@@ -591,3 +591,133 @@ set.clear();
 System.out.println(set.isEmpty());
 ```
 
+### 排序
+
+一开始默认可以在类内部重写排序规则：
+
+首先继承排序接口：`Comparable<Person>` 
+
+```java
+int compare(Person p1, Person p2) 返回一个基本类型的整型，
+返回负数表示：p1 小于 p2，
+返回0 表示： p1 和 p2相等，
+返回正数表示：p1 大于 p2
+
+所以重写排序规则的时候很灵活。如果类型是数字的话，可以直接 -， 其他类型用 compareTo 函数。
+如果从大到小排就 return 的时候把 p1 and p2 调换一下。
+```
+
+
+
+```java
+package com.ytc.alpha;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
+public class Person implements Comparable<Person>{
+    private String name;
+    private Integer age;
+
+    public Person(String name, Integer age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
+    @Override
+    public int compareTo(Person o) {
+        return this.age - o.age;
+    }
+
+    public static void main(String[] args) {
+        List<Person> plist = new ArrayList<Person>();
+        Person p1 = new Person("0001", 14);
+        Person p4 = new Person("0004",23);
+        Person p5 = new Person("0005",25);
+        Person p3 = new Person("0003",25);
+        Person p6 = new Person("0006",25);
+        Person p7 = new Person("0007",25);
+        Person p2 = new Person("0002",20);
+
+        plist.add(p1);
+        plist.add(p2);
+        plist.add(p3);
+        plist.add(p4);
+        plist.add(p5);
+        plist.add(p6);
+        plist.add(p7);
+        for(Person person : plist){
+            System.out.println("排序前的结果："+person.getName() + " " + person.getAge());
+        }
+        Collections.sort((plist));
+
+        System.out.println();
+        for(Person person : plist){
+            System.out.println("排序前的结果："+person.getName() + " " + person.getAge());
+        }
+    }
+
+}
+
+```
+
+#### 比较器的使用
+
+默认是用 `age` 排序，但是有的时候需要用 `name` 来排序怎么办？ 这个时候比较器 ：`Comparator` 就排上用场了。
+
+`Comparator` 的使用有两种方式：
+
+- `Collections.sort(list,Comparator<T>）;`
+- `list.sort(Comparator<T>);`
+
+其实主要是看 `Comparator` 接口的实现，重写里面的 `compare` 方法。代码如下：
+
+```java
+// 方法一
+Collections.sort(plist, new Comparator<Person>(){
+  @Override
+  public int compare(Person p1, Person p2) {
+    //按照Person的年龄进行升序排列,如果年龄一样按照姓名从大到小排序
+    if (p1.getAge() == p2.getAge())
+      return p2.getName().compareTo(p1.getName());
+    return p1.getAge().compareTo(p2.getAge());
+  }
+});
+
+// 方法二
+plist.sort(new Comparator<Person>() {
+  // 倒序排列
+  @Override
+  public int compare(Person o1, Person o2) {
+    return o2.age.compareTo(o1.age);
+  }
+});
+// 方法三：
+// 定义一个比较器的类，然后直接用就可以了， 可以不用在主程序中写比较的内容
+// 这个类要继承比较器的接口，然后重写比较的规则
+class idComparator implements Comparator<Person> {
+    @Override
+    public int compare(Person o1, Person o2) {
+        return o2.getAge() - o1.getAge();
+    }
+}
+```
+
